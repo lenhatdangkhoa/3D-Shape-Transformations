@@ -1,6 +1,7 @@
 from PIL import Image
 import math
-
+import numpy as np
+import transformations as trans
 # Creating a 250 x 250 plain black image
 image = Image.new(mode="RGB", size = (501, 501), color = (0,0,0))
 
@@ -45,24 +46,90 @@ def draw_basic_line(x0, y0, x1, y1):
                if (x > -1  and x < 501) and (y > -1 and y < 501):
                 image.putpixel((x,y), (255,255,255))
 
-draw_basic_line(375, 375, 500, 375)
-draw_basic_line(500, 375, 500, 500)
-draw_basic_line(500, 500, 375, 500)
-draw_basic_line(375, 500, 375, 375)
+coordinates = {
+    0: [1,1,1,1],
+    1: [2,1,1,1],
+    2: [2,2,1,1],
+    3: [1,2,1,1],
+    4: [1,1,2,1],
+    5: [2,1,2,1],
+    6: [2,2,2,1],
+    7: [1,2,2,1]
+}
+vertex_table = {
+    0: [0,0],
+    1: [0,0],
+    2: [0,0],
+    3: [0,0],
+    4: [0,0],
+    5: [0,0],
+    6: [0,0],
+    7: [0,0],
+}
 
-draw_basic_line(313,313,375,313)
-draw_basic_line(375,313, 375, 375)
-draw_basic_line(375,375, 313, 375)
-draw_basic_line(313,375,313,313)
+for i in coordinates:
+    matrix = np.dot(coordinates[i], trans.translate(0,0,0))
+    coordinates[i] = matrix
+    #print(f"{matrix[0]} {matrix[1]} {matrix[2]} {matrix[3]}")
 
-draw_basic_line(375,375,313,313)
-draw_basic_line(500,375,375,313)
-draw_basic_line(500,500,375,375)
-draw_basic_line(375,500,313,375)
-"""
+for i in coordinates:
+    x = ((7.5 * coordinates[i][0]) / (15 * coordinates[i][2])) * 250 + 250
+    y = ((7.5 * coordinates[i][1]) / (15 * coordinates[i][2])) * 250 + 250
+    vertex_table[i] = [math.trunc(x), math.trunc(y)]
 
 
-draw_basic_line(375,375,375,125)
-draw_basic_line(375,125,125,125)
-"""
+
+
+
+draw_basic_line(
+    vertex_table[0][0], vertex_table[0][1],
+    vertex_table[1][0], vertex_table[1][1]
+)
+draw_basic_line(
+    vertex_table[1][0], vertex_table[1][1],
+    vertex_table[2][0], vertex_table[2][1]
+)
+draw_basic_line(
+    vertex_table[2][0], vertex_table[2][1],
+    vertex_table[3][0], vertex_table[3][1]
+)
+draw_basic_line(
+    vertex_table[3][0], vertex_table[3][1],
+    vertex_table[0][0], vertex_table[0][1]
+)
+
+draw_basic_line(
+    vertex_table[4][0], vertex_table[4][1],
+    vertex_table[5][0], vertex_table[5][1]
+)
+draw_basic_line(
+    vertex_table[5][0], vertex_table[5][1],
+    vertex_table[6][0], vertex_table[6][1]
+)
+draw_basic_line(
+    vertex_table[6][0], vertex_table[6][1],
+    vertex_table[7][0], vertex_table[7][1]
+)
+draw_basic_line(
+    vertex_table[7][0], vertex_table[7][1],
+    vertex_table[4][0], vertex_table[4][1]
+)
+
+draw_basic_line(
+    vertex_table[0][0], vertex_table[0][1],
+    vertex_table[4][0], vertex_table[4][1]
+)
+draw_basic_line(
+    vertex_table[1][0], vertex_table[1][1],
+    vertex_table[5][0], vertex_table[5][1]
+)
+draw_basic_line(
+    vertex_table[2][0], vertex_table[2][1],
+    vertex_table[6][0], vertex_table[6][1]
+)
+draw_basic_line(
+    vertex_table[3][0], vertex_table[3][1],
+    vertex_table[7][0], vertex_table[7][1]
+)
+
 image.show()
