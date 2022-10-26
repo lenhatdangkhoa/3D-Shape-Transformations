@@ -71,13 +71,14 @@ eye_transformation = trans.eyeCS(6,8,7.5,60,15)
 
 for i in coordinates:
     matrix = np.dot(coordinates[i], eye_transformation)
+    #matrix = np.dot(matrix, trans.scale(2,2,1, 0,0,0))
     coordinates[i] = matrix
-    #print(f"{matrix[0]} {matrix[1]} {matrix[2]} {matrix[3]}")
 
 for i in coordinates:
     x = (coordinates[i][0] / coordinates[i][2]) * 511.5 + 511.5
     y = (coordinates[i][1] / coordinates[i][2]) * 511.5 + 511.5
     vertex_table[i] = [math.trunc(x), math.trunc(y)]
+
 
 
 
