@@ -3,11 +3,15 @@ import math
 import numpy as np
 import transformations as trans
 import csv
+from decimal import Decimal
+import decimal
 
 # Creating a 1024 plain black image
 image = Image.new(mode="RGB", size = (1024, 1024), color = (0,0,0))
 
 np.set_printoptions(formatter={'float' : lambda x: "{0:0.3f}".format(x)}) # Setting the decimal value for matrix combinations to be 3 decimal places
+
+decimal.getcontext().prec = 3 # Used for timing, up to 7 decimal places
 
 """
 Takes two coordinates and draw a line using the basic line drawing algorithm
@@ -66,10 +70,12 @@ with open("cube_coordinates.csv", 'r') as csvfile:
         
     eye_transformation = trans.eyeCS(6,8,7.5,60,15) # Transform from World Coordinate System to Eye Coordinate System
 
+
 # Transform all points in coordinates to ECS
 for i in cube_coordinates:
     matrix = np.dot(cube_coordinates[i], eye_transformation)
     cube_coordinates[i] = matrix
+
 
 # Converting (x,y,z) to (x', y') using perspective projection
 cube_vertex_table = {}
@@ -78,10 +84,7 @@ for i in cube_coordinates:
     y = (cube_coordinates[i][1] / cube_coordinates[i][2]) * 511.5 + 511.5
     cube_vertex_table[i] = [math.trunc(x), math.trunc(y)]
 
-def reset_vertex_table():
-    return {}
-#print(cube_vertex_table)
-def draw_cube(cube_vertex_table):
+def draw_cube():
     draw_basic_line(
         cube_vertex_table[0][0], cube_vertex_table[0][1],
         cube_vertex_table[1][0], cube_vertex_table[1][1]
@@ -159,9 +162,9 @@ def draw_triangular_prism():
     # Converting (x,y,z) to (x', y') using perspective projection
     vertex_table = {}
     for i in coordinates:
-        x = (coordinates[i][0] / coordinates[i][2]) * 511.5 + 511.5
-        y = (coordinates[i][1] / coordinates[i][2]) * 511.5 + 511.5
-        vertex_table[i] = [math.trunc(x), math.trunc(y)]
+        x = Decimal((coordinates[i][0] / coordinates[i][2]) * 511.5 + 511.5)
+        y = Decimal((coordinates[i][1] / coordinates[i][2]) * 511.5 + 511.5)
+        vertex_table[i] = [(math.trunc(x)), math.trunc(y)]
     
     draw_basic_line(
         vertex_table[0][0], vertex_table[0][1],
