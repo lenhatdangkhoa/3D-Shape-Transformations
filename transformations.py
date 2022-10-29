@@ -43,7 +43,10 @@ def x_rotate(angle):
             [0, -math.sin(math.radians(angle)), math.cos(math.radians(angle)),0],
             [0,0,0,1]]
 
-# Return a 4x4 eye coordinate system transformation matrix. D is the distance from the screen for optimal view and S is
+"""
+Return a 4x4 eye coordinate system transformation matrix. D is the distance from the screen for optimal view half of the screen's size.
+x,y,z are coordinates of the eye.
+"""
 def eyeCS(x,y,z, D, S):
     trans_matrix = translate(-x,-y,-z)
     static_matrix =  [[1,0,0,0],
