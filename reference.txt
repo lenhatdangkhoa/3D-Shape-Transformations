@@ -1,0 +1,1 @@
+https://stackoverflow.com/questions/11838352/multiply-several-matrices-in-numpy
